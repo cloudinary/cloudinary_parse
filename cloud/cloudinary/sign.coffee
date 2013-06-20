@@ -4,16 +4,16 @@ config = require('cloud/cloudinary/config.js')
 
 exports.sign_upload_request = (params) ->
   params = build_upload_params(params)
+  for k, v of params when not present(v)
+    delete params[k]
+
   api_secret = config().api_secret
   if !api_secret?
     throw "Must supply api_secret"
-  params.signature = api_sign_request(params, )
+  params.signature = api_sign_request(params, api_secret)
   params.api_key = config().api_key
   if !params.api_key?
     throw "Must supply api_key"
-
-  for k, v of params when not present(v)
-    delete params[k]
 
   return params
 
