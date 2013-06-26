@@ -4,18 +4,42 @@ config = require('cloud/cloudinary/config.js')
 
 exports.sign_upload_request = (params) ->
   params = build_upload_params(params)
+  params.signature = sign_request(params)
+  params.api_key = config().api_key
+  if !params.api_key?
+    throw "Must supply api_key"
+  params
+
+identifier_pattern = ///
+  ^(?:([^/]+)/)??
+   (?:([^/]+)/)??
+   (?:v(\d+)/)?
+   (?:([^#/]+?)
+     (?:\.([^.#/]+))?)
+   (?:#([^/]+))?$
+///
+
+exports.verify_upload = (identifier) ->
+  [match, resource_type, image_type, version, public_id, format, signature] =
+    identifier.match(identifier_pattern) || []
+  expected_signature = sign_request(public_id: public_id, version: version)
+  console.log 'Signing '
+  console.log public_id: public_id, version: version, expected: expected_signature, given: signature
+
+  expected_signature == signature
+
+exports.remove_signature = (identifier) ->
+  identifier.replace /#.*$/, ''
+
+sign_request = (params) ->
   for k, v of params when not present(v)
     delete params[k]
 
   api_secret = config().api_secret
   if !api_secret?
     throw "Must supply api_secret"
-  params.signature = api_sign_request(params, api_secret)
-  params.api_key = config().api_key
-  if !params.api_key?
-    throw "Must supply api_key"
 
-  return params
+  api_sign_request(params, api_secret)
 
 get_api_url = (action = 'upload', options = {}) ->
   cloudinary = options["upload_prefix"] ? config().upload_prefix ? "https://api.cloudinary.com"

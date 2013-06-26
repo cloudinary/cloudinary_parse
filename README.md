@@ -5,9 +5,12 @@ Also provided in this package is sample code of a simple Cloud Function that sig
 
 ## Files
 
-* `cloud/main.js` - The main cloud code file loaded by parse. Contains a sample cloud function (`sign_upload_request`) that returns an object with all required parameters to initiate a direct upload to cloudinary.
-The sample function requires an authenticated Parse user and embeds the username into the tags field.   
-The returned data can be used to construct an HTML form or passed to cloudinary front-end libraries to initiate an image upload.
+* `cloud/main.js` - The main cloud code file loaded by parse. Contains:
+   * A sample cloud function (`sign_upload_request`) that returns an object with all required parameters to initiate a direct upload to cloudinary.   
+     The function requires an authenticated Parse user and embeds the username into the tags field.   
+     The returned data can be used to construct an HTML form or passed to cloudinary front-end libraries to initiate an image upload.
+   * A sample beforeSave factory (`beforeSaveFactory`). When given an `object_name` and a `field_name`, creates a beforeSave function that verifies updates to `field_name` are only done with a signed cloudinary identifier.   
+     The beforeSave function also removes the signatures when saving to the database.
 * `cloud/cloudinary/all.js` - The cloudinary library entrypoint. In order to load cloudinary library you must `require('cloud/cloudinary/all')` the result of this expression is the cloudinary namespace. See `cloud/main.js` for sample usage.
 * `cloud/cloudinary_config.js` holds cloudinary configuration as demonstrated in `cloud/cloudinary_config.js.sample`
 
