@@ -1,4 +1,4 @@
-# Cloud code
+# Cloudinary Parse Module
 This package contains Cloudinary's integration pack for Parse Cloud Code.
 The cloudinary library provides a mechanism for storing cloudinary credentials and signing upload requests.   
 Also provided in this package is sample code of a simple Cloud Function that signs upload requests for authenticated users.
