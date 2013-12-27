@@ -11,7 +11,7 @@ Also provided in this package is sample code of a simple Cloud Function that sig
      The returned data can be used to construct an HTML form or passed to cloudinary front-end libraries to initiate an image upload.
    * A sample beforeSave factory (`beforeSaveFactory`). When given an `object_name` and a `field_name`, creates a beforeSave function that verifies updates to `field_name` are only done with a signed cloudinary identifier.   
      The beforeSave function also removes the signatures when saving to the database.
-* `cloud/cloudinary/all.js` - The cloudinary library entrypoint. In order to load cloudinary library you must `require('cloud/cloudinary/all')` the result of this expression is the cloudinary namespace. See `cloud/main.js` for sample usage.
+* `cloud/cloudinary.js` - The cloudinary library entrypoint. In order to load cloudinary library you must `require('cloud/cloudinary')` the result of this expression is the cloudinary namespace. See `cloud/main.js` for sample usage.
 * `cloud/cloudinary_config.js` holds cloudinary configuration as demonstrated in `cloud/cloudinary_config.js.sample`
 
 ## Setup the sample project

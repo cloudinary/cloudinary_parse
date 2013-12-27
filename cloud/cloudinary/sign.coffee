@@ -1,6 +1,7 @@
-_ = require('cloud/cloudinary/lib/underscore')
-sha1 = require('cloud/cloudinary/lib/crypto/sha1')
-config = require('cloud/cloudinary/config.js')
+GLOBAL = Parse.Cloudinary ?= {}
+_ = GLOBAL.require("lib/underscore")
+sha1 = GLOBAL.require("lib/crypto/sha1")
+config = GLOBAL.require("config")
 
 exports.sign_upload_request = (params) ->
   params = build_upload_params(params)
