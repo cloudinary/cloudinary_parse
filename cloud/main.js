@@ -1,5 +1,8 @@
-cloudinary = require("cloud/cloudinary/all");
-_ = require('cloud/cloudinary/lib/underscore')
+/**
+ * Require global or local cloudinary:
+ */
+// cloudinary = require("cloudinary");
+cloudinary = require("cloud/cloudinary");
 
 /* Configuration sample:
     cloudinary.config({
@@ -62,5 +65,7 @@ function beforeSaveFactory(object_name, field_name) {
 /// The following lines install a beforeSave filter for the given field within the given object
 var object_name = "Photo";
 var field_name = "cloudinary_identifier";
-beforeSaveFactory(object_name, field_name);
+/// You can either use and modify the example beforeSaveFactory in this file, or use the one from the library:
+// beforeSaveFactory(object_name, field_name);
+cloudinary.beforeSaveFactory(object_name, field_name);
 

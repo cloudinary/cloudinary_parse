@@ -1,4 +1,6 @@
-_ = require("cloud/cloudinary/lib/underscore")
+GLOBAL = Parse.Cloudinary ?= {}
+_ = GLOBAL.require("lib/underscore")
+
 cloudinary_config = undefined
 module.exports = (new_config, new_value) ->
   if cloudinary_config == undefined || new_config == true
