@@ -1,1 +1,4 @@
-cloud/cloudinary_config.js
+sample/cloud/cloudinary_config.js
+sample/config
+sample/public
+.project

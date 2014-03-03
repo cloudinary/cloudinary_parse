@@ -1,125 +1,61 @@
 # Cloudinary Parse Module
-This package contains Cloudinary's integration pack for Parse Cloud Code.
-The cloudinary library provides a mechanism for storing cloudinary credentials and signing upload requests.   
-Also provided in this package is sample code of a simple Cloud Function that signs upload requests for authenticated users.
+This package contains Cloudinary's Parse Cloud Module.
+The cloudinary library provides a mechanism for storing cloudinary credentials, signing upload requests and generating Cloudinary URLs.   
+
+## What is Cloudinary?
+
+Cloudinary is a cloud-based service that provides an end-to-end image management solution including uploads, storage, manipulations, 
+optimizations and delivery.
+
+With Cloudinary you can easily upload images to the cloud, automatically perform smart image manipulations without installing any complex software. 
+All your images are then seamlessly delivered through a fast CDN, optimized and using industry best practices. 
+Cloudinary offers comprehensive APIs and administration capabilities and is easy to integrate with new and existing web and mobile applications.
 
 ## Files
 
-* `cloud/main.js` - The main cloud code file loaded by parse. Contains:
-   * A sample cloud function (`sign_upload_request`) that returns an object with all required parameters to initiate a direct upload to cloudinary.   
-     The function requires an authenticated Parse user and embeds the username into the tags field.   
-     The returned data can be used to construct an HTML form or passed to cloudinary front-end libraries to initiate an image upload.
-   * A sample beforeSave factory (`beforeSaveFactory`). When given an `object_name` and a `field_name`, creates a beforeSave function that verifies updates to `field_name` are only done with a signed cloudinary identifier.   
-     The beforeSave function also removes the signatures when saving to the database.
 * `cloud/cloudinary.js` - The cloudinary library entrypoint. In order to load cloudinary library you must `require('cloud/cloudinary')` the result of this expression is the cloudinary namespace. See `cloud/main.js` for sample usage.
-* `cloud/cloudinary_config.js` holds cloudinary configuration as demonstrated in `cloud/cloudinary_config.js.sample`
-
-## Setup the sample project
-
-* [Signup or login to Parse](https://parse.com/#signup)
-* [Create a new app](https://parse.com/apps/new)
-* Install the Cloud Code Command Line Tool (See [Cloud Code Guide](https://parse.com/docs/cloud_code_guide#started) for more info)
-* Create a new project with `parse new`
-* Copy the files in this package to the new project folder
-* Create cloudinary configuration file (`cloudinary_config.js`)
-* Deploy your code `parse deploy`
-
-You're now ready to go
 
 ## Configuration
+
 Supplying cloudinary configuration can be specified either by providing `cloudinary_config.js` in the `cloud` directory, or by directly calling `cloudinary.config` with a configuration object (See comment in `main.js` for sample usage).
 
-# Sample usage with cURL
-## Signup
+## Functions
 
-    curl -X POST \
-      -H "X-Parse-Application-Id: PARSE_APP_ID" \
-      -H "X-Parse-REST-API-Key: PARSE_REST_API_KEY" \
-      -H "Content-Type: application/json" \
-      -d '{"username":"MY_USER","password":"MY_PASS"}' \
-      https://api.parse.com/1/users
+  * beforeSaveFactory - When given an `object_name` and a `field_name`, creates a beforeSave function that verifies updates to `field_name` are only done with a signed cloudinary identifier.   
+     The beforeSave function also removes the signatures when saving to the database.
+  * url - builds a cloudinary URL given the image identifier and transformation parameters. As a reference you can check the [nodejs documentation](http://cloudinary.com/documentation/node_image_manipulation)
+  * sign_upload_request - created a signed request that can be used to construct an HTML form or passed to Cloudinary front-end libraries to initiate an image upload.
 
-## Login
+## Usage Example
 
-    curl -X GET \
-      -H "X-Parse-Application-Id: PARSE_APP_ID" \
-      -H "X-Parse-REST-API-Key: PARSE_REST_API_KEY" \
-      -G \
-      --data-urlencode 'username=MY_USER' \
-      --data-urlencode 'password=MY_PASS' \
-      https://api.parse.com/1/login
+````
+cloudinary = require("cloud/cloudinary");
 
-Response:
+cloudinary.beforeSaveFactory("Photo", "cloudinaryIdentifier");
 
-    {
-      "username":"MY_USER",
-      "createdAt":"2013-04-21T12:55:41.891Z",
-      "updatedAt":"2013-04-21T12:55:41.891Z",
-      "objectId":"JovCXZZxk7",
-      "sessionToken":"SESSION-TOKEN"
+Parse.Cloud.define("sign_cloudinary_upload_request", function(request, response) {
+    if (!request.user || !request.user.authenticated()) {
+        response.error("Needs an authenticated user");
+        return;
     }
+    response.success(
+        cloudinary.sign_upload_request({tags: request.user.getUsername(), eager: {crop: "fill", width: 150, height: 100, gravity: "face"}})
+    );
+});
 
+````
 
-## Get signature
+## Sample project
 
-Use `sessionToken` from login response
-
-    curl -X POST \
-      -H "X-Parse-Application-Id: PARSE_APP_ID" \
-      -H "X-Parse-REST-API-Key: PARSE_REST_API_KEY" \
-      -H "X-Parse-Session-Token: SESSION-TOKEN" \
-      -H "Content-Type: application/json" \
-      -d '{}' \
-      https://api.parse.com/1/functions/sign_upload_request
-
-Resposne:
-
-    {
-      "result": {
-        "timestamp":1366555048,
-        "tags":"MY_USER",
-        "signature":"CLOUDINARY_SIGNATURE",
-        "api_key":"CLOUDINARY_API_KEY"
-      }
-    }
-
-## Upload image to Cloudinary using obtained signature
-
-Using the response from `sign_upload_request`:
-
-    curl -X POST \
-      -F timestamp=1366555048 \
-      -F tags=MY_USER \
-      -F signature=CLOUDINARY_SIGNATURE \
-      -F api_key="CLOUDINARY_API_KEY" \
-      -F file=@MY_IMAGE.jpg \
-      http://api.cloudinary.com/v1_1/MY_CLOUD_NAME/image/upload
-
-Response:
-
-    {
-      "public_id":"k3vmeifbepxddbzjuop9",
-      "version":1366555348,
-      "signature":"CLOUDINARY_RESULT_SIGNATURE",
-      "width":453,
-      "height":604,
-      "format":"jpg",
-      "resource_type":"image",
-      "created_at":"2013-04-21T15:31:06Z",
-      "tags":["MY_USER"],
-      "bytes":52534,
-      "type":"upload",
-      "url":"http://res.cloudinary.com/my_cloud_name/image/upload/v1366555348/k3vmeifbepxddbzjuop9.jpg",
-      "secure_url":"https://cloudinary-a.akamaihd.net/my_cloud_name/image/upload/v1366555348/k3vmeifbepxddbzjuop9.jpg"
-    }
+See the [Cloudinary Parse sample project](https://github.com/cloudinary/cloudinary_parse/edit/master/sample)
 
 # Support
 
 You can [open an issue through GitHub](https://github.com/cloudinary/cloudinary_parse/issues).
 
-Contact us at [info@cloudinary.com](mailto:info@cloudinary.com)
+Contact us [http://cloudinary.com/contact](http://cloudinary.com/contact)
 
-Or via Twitter: [@cloudinary](https://twitter.com/#!/cloudinary)
+Stay tuned for updates, tips and tutorials: [Blog](http://cloudinary.com/blog), [Twitter](https://twitter.com/cloudinary), [Facebook](http://www.facebook.com/Cloudinary).
 
 # License
 Released under the MIT license.

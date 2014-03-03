@@ -1,1 +1,1 @@
-Parse.Cloudinary.VERSION = "0.9.0";
+Parse.Cloudinary.VERSION = "1.0.0";

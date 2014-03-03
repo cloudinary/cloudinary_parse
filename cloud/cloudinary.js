@@ -5,19 +5,18 @@
   GLOBAL = Parse.Cloudinary != null ? Parse.Cloudinary : Parse.Cloudinary = {};
 
   GLOBAL.get_cloudinary_path = function() {
-    var cloudinary_path, e, prefices, prefix, require_test_file, _i, _len;
+    var cloudinary_path, e, prefix, prefixes, require_test_file, _i, _len;
     if (GLOBAL.PREFIX != null) {
       return GLOBAL.PREFIX;
     }
-    prefices = ['cloud', ''];
+    prefixes = ['cloud', ''];
     cloudinary_path = "cloudinary";
     require_test_file = "version";
-    for (_i = 0, _len = prefices.length; _i < _len; _i++) {
-      prefix = prefices[_i];
+    for (_i = 0, _len = prefixes.length; _i < _len; _i++) {
+      prefix = prefixes[_i];
       try {
         require([prefix, cloudinary_path, require_test_file].join("/"));
         GLOBAL.PREFIX = [prefix, cloudinary_path, ""].join("/");
-        console.log("Cloudinary prefix: " + GLOBAL.PREFIX);
         return GLOBAL.PREFIX;
       } catch (_error) {
         e = _error;
@@ -37,7 +36,7 @@
 
   _ = GLOBAL.require('lib/underscore.js');
 
-  _.extend(exports, GLOBAL.require('sign.js'));
+  _.extend(exports, GLOBAL.require('core.js'));
 
   exports.config = GLOBAL.require('config.js');
 
@@ -53,7 +52,7 @@
 
   /*
     This factory creates a beforeSave filter that verifies that a given
-    cloudinary-identifier field in your object is a valid (has correct signature)
+    cloudinaryIdentifier field in your object is a valid (has correct signature)
   
     @note This function allows changing of other fields without validation
   */

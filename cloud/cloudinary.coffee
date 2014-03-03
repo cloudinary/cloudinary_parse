@@ -1,15 +1,14 @@
 GLOBAL = Parse.Cloudinary ?= {}
 GLOBAL.get_cloudinary_path = ->
     return GLOBAL.PREFIX if GLOBAL.PREFIX?
-    prefices = ['cloud', '']
+    prefixes = ['cloud', '']
     cloudinary_path = "cloudinary"
     require_test_file = "version"
 
-    for prefix in prefices
+    for prefix in prefixes
         try
             require [prefix, cloudinary_path, require_test_file].join("/")
             GLOBAL.PREFIX = [prefix, cloudinary_path, ""].join("/")
-            console.log "Cloudinary prefix: " + GLOBAL.PREFIX
             return GLOBAL.PREFIX
         catch e
             throw e unless e.message.match(/Module \S+ not found/)
@@ -21,7 +20,7 @@ GLOBAL.require = (file) ->
 
 _ = GLOBAL.require 'lib/underscore.js'
 
-_.extend exports, GLOBAL.require('sign.js')
+_.extend exports, GLOBAL.require('core.js')
 exports.config = GLOBAL.require('config.js')
 exports.initialize = (cloud_name, api_key, api_secret) ->
     exports.config(cloud_name: cloud_name, api_key: api_key, api_secret: api_secret)
@@ -29,7 +28,7 @@ exports.version = Parse.Cloudinary.VERSION
 
 ###
   This factory creates a beforeSave filter that verifies that a given
-  cloudinary-identifier field in your object is a valid (has correct signature)
+  cloudinaryIdentifier field in your object is a valid (has correct signature)
 
   @note This function allows changing of other fields without validation
 ###
