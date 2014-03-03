@@ -145,7 +145,7 @@ Using the objectId returned when creating the Photo record:
       -H "X-Parse-Session-Token: SESSION_TOKEN" \
       -H "Content-Type: application/json" \
       -d '{"objectId":"PHOTO_ID"}' \
-      https://api.parse.com/1/functions/build_cloudinary_url
+      https://api.parse.com/1/functions/photo_thumbnail_url
 
 Response:
     
