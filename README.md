@@ -12,7 +12,7 @@ Cloudinary offers comprehensive APIs and administration capabilities and is easy
 
 The Cloudinary Parse Module simplifies the integration of your Parse based applications with the Cloudinary service. The module allows you to use Cloudinary's rich set of cloud-based image management features. Securely upload images to the cloud directly from your mobile apps. The image identifiers are automatically assigned to your Parse backend model. 
 
-The module can then be used to easily deliver your images responsively to your mobile users while applying any of Cloudinary's image manipulation capabilities, including smart cropping, various image effects, watermarks, overlays and many others.
+The image identifiers can then be used to easily deliver your images responsively to your mobile users while applying any of Cloudinary's image manipulation capabilities, including smart cropping, various image effects, watermarks, overlays and many others.
 
 
 ## Files
