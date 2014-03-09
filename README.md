@@ -19,6 +19,11 @@ The image identifiers can then be used to easily deliver your images responsivel
 
 * `cloud/cloudinary.js` - The cloudinary library entrypoint. In order to load cloudinary library you must `require('cloud/cloudinary')` the result of this expression is the cloudinary namespace. See `sample/cloud/main.js` for sample usage.
 
+### Installation
+
+Installing the Cloud Module is done by copying all files and folders under [https://github.com/cloudinary/cloudinary_parse/tree/master/cloud](https://github.com/cloudinary/cloudinary_parse/tree/master/cloud) to the `cloud` folder of the specific Cloud Code project that uses the module. In the case of the included sample Cloud Code project, it should be copied to the `cloud` folder of a local copy of: [https://github.com/cloudinary/cloudinary_parse/tree/master/sample](https://github.com/cloudinary/cloudinary_parse/tree/master/sample)
+
+
 ## Configuration
 
 Supplying cloudinary configuration can be specified either by providing `cloudinary_config.js` in the `cloud` directory, or by directly calling `cloudinary.config` with a configuration object (See comment in `sample/cloud/main.js` for sample usage). 
@@ -29,10 +34,31 @@ If you haven't done so already, you can [sign-up to a free Cloudinary account](h
 
 ## Functions
 
-  * `beforeSaveFactory` - When given an `object_name` and a `field_name`, creates a beforeSave function that verifies updates to `field_name` are only done with a signed cloudinary identifier.   
-     The beforeSave function also removes the signatures when saving to the database.
-  * `url` - builds a cloudinary URL given the image identifier and transformation parameters. As a reference you can check the [nodejs documentation](http://cloudinary.com/documentation/node_image_manipulation). Alternatively, you can build Cloudinary image manipulation and delivery URLs from your mobile applications.
-  * `sign_upload_request` - creates a signed request that can be used to construct an HTML form or passed to Cloudinary front-end libraries to initiate a secure image upload.
+### sign_upload_request
+
+Creates a signed request that can be used to construct an HTML form or passed to Cloudinary front-end libraries to initiate a secure image upload.
+
+  *  Uploading of images to Cloudinary is performed directly from web or mobile applications. 
+  *  In order to initiate an authenticated upload request from the mobile apps, the server-side, Parse in this case, needs to create a signature for securing each upload request. 
+  *  The `sign_upload_request` method generates a signature of given upload parameters, including image manipulation ones, using the API Secret parameter of the Cloudinary account.
+  
+### beforeSaveFactory
+When given an `object_name` and a `field_name`, creates a beforeSave function that verifies updates to `field_name` are only done with a signed cloudinary identifier. The beforeSave function also removes the signatures when saving to the database.
+
+  * Images uploaded directly from web and mobile applications are assigned unique Cloudinary identifiers that should be stored in the Parse backend model for any manipulation and displaying using Cloudinary in web and mobile applications. 
+  * The `beforeSaveFactory` function allows verifying a given image identifier and storing correctly in a Parse model (database) record.
+
+### url
+builds a cloudinary URL given the image identifier and transformation parameters. 
+As a reference you can check the [nodejs documentation](http://cloudinary.com/documentation/node_image_manipulation). Alternatively, you can build Cloudinary image manipulation and delivery URLs from your mobile applications.
+
+  * Cloudinary manipulates images on-the-fly and delivers them via a fast CDN using dynamic URLs. 
+  * The URLs are based on the identifiers of uploaded image. Usually such URLs are built on the client-side web and mobile applications using the identifiers received from the Parse backend. 
+  * However, you might want to generate such URLs on the Parse server side and return them to client apps. 
+  * The `url` function takes care of building the image manipulation and delivery URLs. 
+  * Below are sample manipulation and delivery URL of a previously uploaded image with the public ID of 'couple':
+    * Original image uploaded to Cloudinary: [http://res.cloudinary.com/demo/image/upload/couple.jpg](http://res.cloudinary.com/demo/image/upload/couple.jpg)
+    * On-the-fly manipulation URL of a 150x150 face detection based cropped thumbnail to a circular shape with the Sepia effect applied. [http://res.cloudinary.com/demo/image/upload/c_thumb,w_150,h_150,g_faces,r_max,e_sepia/couple.jpg](http://res.cloudinary.com/demo/image/upload/c_thumb,w_150,h_150,g_faces,r_max,e_sepia/couple.jpg)
 
 ## Usage Example
 
