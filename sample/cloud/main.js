@@ -31,9 +31,7 @@ Parse.Cloud.define("sign_cloudinary_upload_request", function(request, response)
         return;
     }
     response.success(
-        cloudinary.sign_upload_request({tags: request.user.getUsername()})
-
-        // cloudinary.sign_upload_request({tags: request.user.getUsername(), eager: {crop: "fill", width: 150, height: 100, gravity: "face"}})
+        cloudinary.sign_upload_request({tags: request.user.getUsername(), eager: {crop: "fill", width: 150, height: 100, gravity: "face"}})
     );
 });
 
