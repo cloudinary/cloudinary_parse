@@ -151,6 +151,6 @@ Response:
     
     {
       "result": {
-        "url":"http://res.cloudinary.com/my_cloud_name/image/upload/c_fill,h_100,w_150/v1/image/upload/v1366555348/k3vmeifbepxddbzjuop9.jpg"
+        "url":"http://res.cloudinary.com/my_cloud_name/image/upload/c_fill,h_100,w_150/v1366555348/k3vmeifbepxddbzjuop9.jpg"
       }
     }
