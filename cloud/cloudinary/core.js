@@ -356,7 +356,7 @@
   };
 
   exports.url = function(public_id, options) {
-    var api_secret, cdn_subdomain, cloud_name, cname, format, host, prefix, private_cdn, resource_type, rest, secure, secure_distribution, shared_domain, shorten, sign_url, signature, subdomain, transformation, type, url, version;
+    var api_secret, cdn_subdomain, cloud_name, cname, format, host, parsed_identifier, prefix, private_cdn, resource_type, rest, secure, secure_distribution, shared_domain, shorten, sign_url, signature, subdomain, transformation, type, url, version;
     if (options == null) {
       options = {};
     }
@@ -382,6 +382,13 @@
     shorten = option_consume(options, "shorten", config().shorten);
     sign_url = option_consume(options, "sign_url", config().sign_url);
     api_secret = option_consume(options, "api_secret", config().api_secret);
+    parsed_identifier = /^(image|raw)\/([a-z0-9_]+)\/v(\d+)\/([^#]+)$/.exec(public_id);
+    if (parsed_identifier) {
+      resource_type = parsed_identifier[1];
+      type = parsed_identifier[2];
+      version = parsed_identifier[3];
+      public_id = parsed_identifier[4];
+    }
     if (public_id.match(/^https?:/)) {
       if (type === "upload" || type === "asset") {
         return public_id;
