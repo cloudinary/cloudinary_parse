@@ -1,3 +1,6 @@
+:warning: Following [Parse's end of service notification](http://blog.parse.com/announcements/moving-on/), this repo is deprecated and not supported. The issues section won't be available.
+
+
 # Cloudinary Parse Module
 
 ## What is Cloudinary?
